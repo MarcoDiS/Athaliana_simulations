@@ -1,0 +1,12 @@
+
+dump          1 all custom XXXdumpXXX chrs10_6_prodruns_replica_XXXreplicaXXX.XYZ id type xu yu zu
+dump_modify   1 format line "%d %d %.5f %.5f %.5f" sort id append yes
+
+##############################
+# set timestep of integrator #
+##############################
+timestep XXXtimestepXXX
+
+reset_timestep 0
+run XXXrunXXX
+write_data 6_prodruns_XXXrunXXX_replica_XXXreplicaXXX.txt nocoeff

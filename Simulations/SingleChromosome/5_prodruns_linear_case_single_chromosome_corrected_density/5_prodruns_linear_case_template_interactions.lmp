@@ -1,0 +1,58 @@
+pair_coeff * * 1.0 1.0 1.12246152962189 # If not differently specified the particles are neutral
+run 10000000
+write_data 5_relaxed_conformation_replica_XXXreplicaXXX.txt nocoeff
+
+# Undefined chromatin state is of type 1.
+pair_coeff 1 1 1.0 1.0 1.12246152962189 # Undet particles are neutral within them
+
+# Interactions involving constitutive heterochromatin of type 2 and radius 0.5 sigma
+#CH_NEUTandNEUTpair_coeff 1 2 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 1
+#CH_NEUTandNEUTpair_coeff 2 2 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral within itself
+#CH_NEUTandNEUTpair_coeff 2 3 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 3
+#CH_NEUTandNEUTpair_coeff 2 4 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 4
+
+#CH_NEUTandREPUpair_coeff 1 2 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 1
+#CH_NEUTandREPUpair_coeff 2 2 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral within itself
+#CH_NEUTandREPUpair_coeff 2 3 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 3
+#CH_NEUTandREPUpair_coeff 2 4 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 4
+
+#CH_ATTRandREPUpair_coeff 1 2 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 1
+#CH_ATTRandREPUpair_coeff 2 2 XXXCHattractionXXX 1.0 2.5 # constitutive heterochromatin is attractive within itself
+#CH_ATTRandREPUpair_coeff 2 3 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 3
+#CH_ATTRandREPUpair_coeff 2 4 XXXCHrepulsionXXX 3.0 3.36738458886567 # constitutive heterochromatin is repulsive with particle of type 4
+
+#CH_ATTRandNEUTpair_coeff 1 2 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 1
+#CH_ATTRandNEUTpair_coeff 2 2 XXXCHattractionXXX 1.0 2.5 # constitutive heterochromatin is attractive within itself
+#CH_ATTRandNEUTpair_coeff 2 3 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 3
+#CH_ATTRandNEUTpair_coeff 2 4 1.0 1.0 1.12246152962189 # constitutive heterochromatin is neutral with particle of type 4
+
+# Interactions involving facultative heterochromatin of type 3 and radius 0.5 sigma
+#FH_NEUTandNEUTpair_coeff 1 3 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral   with particle of type 1
+#FH_NEUTandNEUTpair_coeff 3 3 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral within itself
+#FH_NEUTandNEUTpair_coeff 3 4 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral   with particle of type 4
+
+#FH_NEUTandREPUpair_coeff 1 3 XXXFHrepulsionXXX 3.0 3.36738458886567 # facultative heterochromatin is repulsive with particle of type 1
+#FH_NEUTandREPUpair_coeff 3 3 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral within itself
+#FH_NEUTandREPUpair_coeff 3 4 XXXFHrepulsionXXX 3.0 3.36738458886567 # facultative heterochromatin is repulsive with particle of type 4
+
+#FH_ATTRandNEUTpair_coeff 1 3 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral   with particle of type 1
+#FH_ATTRandNEUTpair_coeff 3 3 XXXFHattractionXXX 1.0 2.5 # facultative heterochromatin is attractive within itself
+#FH_ATTRandNEUTpair_coeff 3 4 1.0 1.0 1.12246152962189 # facultative heterochromatin is neutral   with particle of type 4
+
+# Interactions involving active chromatin of type 4 and radius 0.5 sigma
+#AC_ATTRandNEUTpair_coeff 1 4 1.0 1.0 1.12246152962189 # active chromatin is neutral with particle of type 1
+#AC_ATTRandNEUTpair_coeff 4 4 XXXACattractionXXX 1.0 2.5 # active chromatin is attractive within itself
+
+#AC_NEUTandREPUpair_coeff 1 4 XXXACrepulsionXXX 3.0 3.36738458886567 # active chromatin is repulsive with particle of type 1
+#AC_NEUTandREPUpair_coeff 4 4 1.0 1.0 1.12246152962189 # active chromatin is neutral within itself
+
+#AC_NEUTandNEUTpair_coeff 1 4 1.0 1.0 1.12246152962189 # active chromatin is neutral with particle of type 1
+#AC_NEUTandNEUTpair_coeff 4 4 1.0 1.0 1.12246152962189 # active chromatin is neutral within itself
+
+
+#########################################
+# run integration for a number of steps #
+#########################################
+minimize 1.0e-4 1.0e-6 100000 100000
+reset_timestep 0
+run 10000

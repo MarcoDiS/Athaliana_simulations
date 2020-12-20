@@ -1,0 +1,166 @@
+###############################################################################
+# Reference paper:                                                            #
+# K. Kremer and G. S. Grest                                                   #
+# Dynamics of entangled linear polymer melts: A molecular-dynamics simulation #
+# J Chem Phys 92, 5057 (1990)                                                 #
+###############################################################################
+
+#######################################################
+# Box and units  (use LJ units and period boundaries) #
+#######################################################
+units lj
+atom_style angle #with stiffness
+
+boundary        f f f
+
+############################
+# READ "Restart" data file #
+############################
+#read_restart restart_tmp.txt
+
+##########################
+# READ "start" data file #
+##########################
+read_data 3_nucleolus_formation_part2_replica_XXXreplicaXXX.txt
+
+set atom 1*84502 type 1 # reset all atoms to type 1
+# Define NADs (NUcleolar Associtad Domain particles)
+set atom     1*51    type 5 #chr1A TEL-L
+set atom 10093*10143 type 5 #chr1A TEL-R
+set atom 10144*10194 type 5 #chr1B TEL-L
+set atom 20236*20286 type 5 #chr1A TEL-R
+set atom 20287*21536 type 5 #chr2A NOR2+TEL-L
+set atom 28003*28053 type 5 #chr2B TEL-R
+set atom 28054*29303 type 5 #chr2B NOR2+TEL-L
+set atom 35770*35820 type 5 #chr2B TEL-R
+set atom 35821*35871 type 5 #chr3A TEL-L
+set atom 43590*43640 type 5 #chr3A TEL-R
+set atom 43641*43691 type 5 #chr3B TEL-L
+set atom 51410*51460 type 5 #chr3B TEL-R
+set atom 51461*52843 type 5 #chr4A NOR4+TEL-L
+set atom 58939*58989 type 5 #chr4A TEL-R
+set atom 58990*60372 type 5 #chr4B NOR4+TEL-L
+set atom 66468*66518 type 5 #chr4B TEL-R
+set atom 66519*66569 type 5 #chr5A TEL-L
+set atom 75460*75510 type 5 #chr5A TEL-R
+set atom 75511*75561 type 5 #chr5B TEL-L
+set atom 84452*84502 type 5 #chr5B TEL-R
+
+mass * 1.0
+
+##################################################################
+# Pair interactions require lists of neighbours to be calculated #
+##################################################################
+neighbor 0.3 bin
+neigh_modify every 1 delay 1 check yes one 3000
+comm_modify mode multi
+
+##############################################################
+# Sample thermodynamic info  (temperature, energy, pressure) #
+##############################################################
+thermo 1000
+
+###############################
+# Stiffness term              #
+# E = K * (1+cos(theta)), K>0 #
+###############################
+angle_style    cosine
+angle_coeff 1 5.00 # Persistence length of 150nm
+
+###################################################################
+# Pair interaction between non-bonded atoms                       #
+#                                                                 #
+#  Lennard-Jones 12-6 potential with cutoff:                      #
+#  potential E=4epsilon[ (sigma/r)^12 - (sigma/r)^6]  for r<r_cut #
+#  r_cut =1.12246 = 2^(1/6) is the minimum of the potential       #
+###################################################################
+pair_style lj/cut 1.12246152962189
+
+################################################################
+#  pair_modify shift yes adds a constant to the potential such #
+#  that E(r_cut)=0. Forces remains unchanged.                  #
+################################################################
+pair_modify     shift yes
+
+######################################
+#  pair_coeff for lj/cut, specify 4: #
+#    * atom type interacting with    #
+#    * atom type                     #
+#    * epsilon (energy units)        #
+#    * sigma (distance units)        #
+######################################
+pair_coeff  *  * 1.0   1.0 1.12246152962189
+pair_coeff  *  5 1.0   XXXsigma14XXX XXXrc14XXX
+pair_coeff  5  5 1.0   XXXsigma44XXX XXXrc44XXX
+
+#########################################################
+# Pair interaction between bonded atoms                 #
+#                                                       #
+# Fene potential + Lennard Jones 12-6:                  #
+#  E= - 0.5 K R0^2 ln[ 1- (r/R0)^2]                     #
+#     + 4epsilon[ (sigma/r)^12 - (sigma/r)^6] + epsilon #
+#########################################################
+bond_style      fene
+
+########################################
+# For style fene, specify:             #
+#   * bond type                        #
+#   * K (energy/distance^2)            #
+#   * R0 (distance)                    #
+#   * epsilon (energy)  (LJ component) #
+#   * sigma (distance)  (LJ component) #
+########################################
+bond_coeff   1     300.0     1.5        10.0 1.0 # Bonds between normal    particles
+bond_coeff   2     300.0     XXXR044XXX 10.0 XXXsigma44XXX # Bonds between NADs      particles
+bond_coeff   3     300.0     XXXR014XXX 10.0 XXXsigma14XXX # Bonds between interface particles
+
+special_bonds fene #<=== I M P O R T A N T (new command)
+
+##############################
+# set timestep of integrator #
+##############################
+timestep XXXtimestepXXX
+
+#######################################################
+# Set up fixes                                        #
+# use NVE ensemble                                    #
+# Langevin integrator Tstart Tstop 1/friction rndseed #
+# => sampling NVT ensamble                            #
+#######################################################
+fix 1 all nve
+fix 2 all langevin   1.0 1.0 2.0           XXXseedXXX
+
+#########################################
+# run integration for a number of steps #
+#########################################
+
+# Mantain Nucleolus
+group NADs   type 5
+group NoNADs type 1
+
+variable NoNucleolarRadius equal 46.6666
+variable NucleolarRadius   equal 46.6666
+variable NuclearRadius     equal XXXnradiusXXX
+
+region Nonucleolus sphere XXXxNADsXXX XXXyNADsXXX XXXzNADsXXX v_NoNucleolarRadius units box side out
+region nucleus     sphere XXXxNADsXXX XXXyNADsXXX XXXzNADsXXX v_NuclearRadius     units box side in
+region nucleolus   sphere XXXxNADsXXX XXXyNADsXXX XXXzNADsXXX v_NucleolarRadius   units box side in
+#The NucleolarRadius is 46.6666*30.0 ~ 2500 nm
+#The NuclearRadius   is 83.3333*30.0 ~ 2500 nm
+
+#fix NoNUCLEOLUS NoNADs wall/region Nonucleolus lj126 1.0 1.0 1.1224615296218
+#fix   NUCLEOLUS   NADs wall/region   nucleolus lj126 1.0 1.0 1.1224615296218
+fix     NUCLEUS   all wall/region nucleus     lj126 1.0 1.0 1.1224615296218
+#fix  NADNUCLEUS   NADs   wall/region nucleus     lj126 1.0 XXXsigma14XXX XXXrc14XXX
+
+thermo_style   custom   step temp etotal v_NuclearRadius
+
+minimize 1.0e-4 1.0e-6 100000 100000
+
+dump 1 all custom XXXdumpXXX chrs10_system_preparation_inflate_NADs_particles_replica_XXXreplicaXXX.XYZ id type xu yu zu
+dump_modify   1 format line "%d %d %.5f %.5f %.5f" sort id append yes
+
+reset_timestep 0
+run XXXrunXXX
+write_restart restart_tmp.txt
+write_data 4_inflate_NADs_particles_replica_XXXreplicaXXX.txt nocoeff

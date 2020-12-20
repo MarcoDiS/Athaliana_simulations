@@ -1,0 +1,10 @@
+group CEN1A id <>  4567 5301 
+group CEN1B id <> 14710 15444
+group CEN2A id <> 22303 23320
+group CEN2B id <> 30070 31087
+group CEN3A id <> 39587 40587
+group CEN3B id <> 47407 48407
+group CEN4A id <> 53394 54511
+group CEN4B id <> 60923 62040
+group CEN5A id <> 70185 70952
+group CEN5B id <> 79177 79944

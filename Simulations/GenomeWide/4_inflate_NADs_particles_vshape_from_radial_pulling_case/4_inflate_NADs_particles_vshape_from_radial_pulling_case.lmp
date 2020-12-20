@@ -1,0 +1,505 @@
+###############################################################################
+# Reference paper:                                                            #
+# K. Kremer and G. S. Grest                                                   #
+# Dynamics of entangled linear polymer melts: A molecular-dynamics simulation #
+# J Chem Phys 92, 5057 (1990)                                                 #
+###############################################################################
+
+#######################################################
+# Box and units  (use LJ units and period boundaries) #
+#######################################################
+units lj
+atom_style angle #with stiffness
+
+boundary        f f f
+
+############################
+# READ "Restart" data file #
+############################
+#read_restart
+
+##########################
+# READ "start" data file #
+##########################
+read_data ./2_radial_pulling_vshape_case_part2_replica_XXXreplicaXXX.txt
+mass * 1.0
+
+set atom 1*84502 type 1 # reset all atoms to type 1
+# NADs particles
+set atom     1*51    type 5 #chr1A TEL-L
+set atom 10093*10143 type 5 #chr1A TEL-R
+set atom 10144*10194 type 5 #chr1B TEL-L
+set atom 20236*20286 type 5 #chr1A TEL-R
+set atom 20287*21536 type 5 #chr2A NOR2+TEL-L
+set atom 28003*28053 type 5 #chr2B TEL-R
+set atom 28054*29303 type 5 #chr2B NOR2+TEL-L
+set atom 35770*35820 type 5 #chr2B TEL-R
+set atom 35821*35871 type 5 #chr3A TEL-L
+set atom 43590*43640 type 5 #chr3A TEL-R
+set atom 43641*43691 type 5 #chr3B TEL-L
+set atom 51410*51460 type 5 #chr3B TEL-R
+set atom 51461*52843 type 5 #chr4A NOR4+TEL-L
+set atom 58939*58989 type 5 #chr4A TEL-R
+set atom 58990*60372 type 5 #chr4B NOR4+TEL-L
+set atom 66468*66518 type 5 #chr4B TEL-R
+set atom 66519*66569 type 5 #chr5A TEL-L
+set atom 75460*75510 type 5 #chr5A TEL-R
+set atom 75511*75561 type 5 #chr5B TEL-L
+set atom 84452*84502 type 5 #chr5B TEL-R
+
+##################################################################
+# Pair interactions require lists of neighbours to be calculated #
+##################################################################
+neighbor 0.3 bin
+neigh_modify every 1 delay 1 check yes one 3000
+comm_modify mode multi
+
+##############################################################
+# Sample thermodynamic info  (temperature, energy, pressure) #
+##############################################################
+thermo 1000
+
+###############################
+# Stiffness term              #
+# E = K * (1+cos(theta)), K>0 #
+###############################
+angle_style    cosine
+angle_coeff 1 5.00 # Persistence length of 150nm
+
+###################################################################
+# Pair interaction between non-bonded atoms                       #
+#                                                                 #
+#  Lennard-Jones 12-6 potential with cutoff:                      #
+#  potential E=4epsilon[ (sigma/r)^12 - (sigma/r)^6]  for r<r_cut #
+#  r_cut =1.12246 = 2^(1/6) is the minimum of the potential       #
+###################################################################
+pair_style lj/cut 1.12246152962189
+
+################################################################
+#  pair_modify shift yes adds a constant to the potential such #
+#  that E(r_cut)=0. Forces remains unchanged.                  #
+################################################################
+pair_modify     shift yes
+
+######################################
+#  pair_coeff for lj/cut, specify 4: #
+#    * atom type interacting with    #
+#    * atom type                     #
+#    * epsilon (energy units)        #
+#    * sigma (distance units)        #
+######################################
+pair_coeff * *  1.0   1.0 1.12246152962189
+pair_coeff 5 5  1.0   1.0 1.12246152962189
+pair_coeff 5 6  1.0   1.0 2.5
+pair_coeff 5 7  1.0   1.0 2.5
+pair_coeff 5 8  1.0   1.0 2.5
+pair_coeff 5 9  1.0   1.0 2.5
+pair_coeff 5 10 1.0   1.0 2.5
+pair_coeff 5 11 1.0   1.0 2.5
+pair_coeff 5 12 1.0   1.0 2.5
+pair_coeff 5 13 1.0   1.0 2.5
+pair_coeff 5 14 1.0   1.0 2.5
+pair_coeff 5 15 1.0   1.0 2.5
+pair_coeff 5 16 1.0   1.0 2.5
+pair_coeff 5 17 1.0   1.0 2.5
+pair_coeff 5 18 1.0   1.0 2.5
+pair_coeff 5 19 1.0   1.0 2.5
+pair_coeff 5 20 1.0   1.0 2.5
+pair_coeff 5 21 1.0   1.0 2.5
+pair_coeff 5 22 1.0   1.0 2.5
+pair_coeff 5 23 1.0   1.0 2.5
+pair_coeff 5 24 1.0   1.0 2.5
+pair_coeff 6 6 1.0   1.0 1.12246152962189
+pair_coeff 6 7 1.0   1.0 2.5
+pair_coeff 6 8 1.0   1.0 2.5
+pair_coeff 6 9 1.0   1.0 2.5
+pair_coeff 6 10 1.0   1.0 2.5
+pair_coeff 6 11 1.0   1.0 2.5
+pair_coeff 6 12 1.0   1.0 2.5
+pair_coeff 6 13 1.0   1.0 2.5
+pair_coeff 6 14 1.0   1.0 2.5
+pair_coeff 6 15 1.0   1.0 2.5
+pair_coeff 6 16 1.0   1.0 2.5
+pair_coeff 6 17 1.0   1.0 2.5
+pair_coeff 6 18 1.0   1.0 2.5
+pair_coeff 6 19 1.0   1.0 2.5
+pair_coeff 6 20 1.0   1.0 2.5
+pair_coeff 6 21 1.0   1.0 2.5
+pair_coeff 6 22 1.0   1.0 2.5
+pair_coeff 6 23 1.0   1.0 2.5
+pair_coeff 6 24 1.0   1.0 2.5
+pair_coeff 7 7 1.0   1.0 1.12246152962189
+pair_coeff 7 8 1.0   1.0 2.5
+pair_coeff 7 9 1.0   1.0 2.5
+pair_coeff 7 10 1.0   1.0 2.5
+pair_coeff 7 11 1.0   1.0 2.5
+pair_coeff 7 12 1.0   1.0 2.5
+pair_coeff 7 13 1.0   1.0 2.5
+pair_coeff 7 14 1.0   1.0 2.5
+pair_coeff 7 15 1.0   1.0 2.5
+pair_coeff 7 16 1.0   1.0 2.5
+pair_coeff 7 17 1.0   1.0 2.5
+pair_coeff 7 18 1.0   1.0 2.5
+pair_coeff 7 19 1.0   1.0 2.5
+pair_coeff 7 20 1.0   1.0 2.5
+pair_coeff 7 21 1.0   1.0 2.5
+pair_coeff 7 22 1.0   1.0 2.5
+pair_coeff 7 23 1.0   1.0 2.5
+pair_coeff 7 24 1.0   1.0 2.5
+pair_coeff 8 8 1.0   1.0 1.12246152962189
+pair_coeff 8 9 1.0   1.0 2.5
+pair_coeff 8 10 1.0   1.0 2.5
+pair_coeff 8 11 1.0   1.0 2.5
+pair_coeff 8 12 1.0   1.0 2.5
+pair_coeff 8 13 1.0   1.0 2.5
+pair_coeff 8 14 1.0   1.0 2.5
+pair_coeff 8 15 1.0   1.0 2.5
+pair_coeff 8 16 1.0   1.0 2.5
+pair_coeff 8 17 1.0   1.0 2.5
+pair_coeff 8 18 1.0   1.0 2.5
+pair_coeff 8 19 1.0   1.0 2.5
+pair_coeff 8 20 1.0   1.0 2.5
+pair_coeff 8 21 1.0   1.0 2.5
+pair_coeff 8 22 1.0   1.0 2.5
+pair_coeff 8 23 1.0   1.0 2.5
+pair_coeff 8 24 1.0   1.0 2.5
+pair_coeff 9 9 1.0   1.0 1.12246152962189
+pair_coeff 9 10 1.0   1.0 2.5
+pair_coeff 9 11 1.0   1.0 2.5
+pair_coeff 9 12 1.0   1.0 2.5
+pair_coeff 9 13 1.0   1.0 2.5
+pair_coeff 9 14 1.0   1.0 2.5
+pair_coeff 9 15 1.0   1.0 2.5
+pair_coeff 9 16 1.0   1.0 2.5
+pair_coeff 9 17 1.0   1.0 2.5
+pair_coeff 9 18 1.0   1.0 2.5
+pair_coeff 9 19 1.0   1.0 2.5
+pair_coeff 9 20 1.0   1.0 2.5
+pair_coeff 9 21 1.0   1.0 2.5
+pair_coeff 9 22 1.0   1.0 2.5
+pair_coeff 9 23 1.0   1.0 2.5
+pair_coeff 9 24 1.0   1.0 2.5
+pair_coeff 10 10 1.0   1.0 1.12246152962189
+pair_coeff 10 11 1.0   1.0 2.5
+pair_coeff 10 12 1.0   1.0 2.5
+pair_coeff 10 13 1.0   1.0 2.5
+pair_coeff 10 14 1.0   1.0 2.5
+pair_coeff 10 15 1.0   1.0 2.5
+pair_coeff 10 16 1.0   1.0 2.5
+pair_coeff 10 17 1.0   1.0 2.5
+pair_coeff 10 18 1.0   1.0 2.5
+pair_coeff 10 19 1.0   1.0 2.5
+pair_coeff 10 20 1.0   1.0 2.5
+pair_coeff 10 21 1.0   1.0 2.5
+pair_coeff 10 22 1.0   1.0 2.5
+pair_coeff 10 23 1.0   1.0 2.5
+pair_coeff 10 24 1.0   1.0 2.5
+pair_coeff 11 11 1.0   1.0 1.12246152962189
+pair_coeff 11 12 1.0   1.0 2.5
+pair_coeff 11 13 1.0   1.0 2.5
+pair_coeff 11 14 1.0   1.0 2.5
+pair_coeff 11 15 1.0   1.0 2.5
+pair_coeff 11 16 1.0   1.0 2.5
+pair_coeff 11 17 1.0   1.0 2.5
+pair_coeff 11 18 1.0   1.0 2.5
+pair_coeff 11 19 1.0   1.0 2.5
+pair_coeff 11 20 1.0   1.0 2.5
+pair_coeff 11 21 1.0   1.0 2.5
+pair_coeff 11 22 1.0   1.0 2.5
+pair_coeff 11 23 1.0   1.0 2.5
+pair_coeff 11 24 1.0   1.0 2.5
+pair_coeff 12 12 1.0   1.0 1.12246152962189
+pair_coeff 12 13 1.0   1.0 2.5
+pair_coeff 12 14 1.0   1.0 2.5
+pair_coeff 12 15 1.0   1.0 2.5
+pair_coeff 12 16 1.0   1.0 2.5
+pair_coeff 12 17 1.0   1.0 2.5
+pair_coeff 12 18 1.0   1.0 2.5
+pair_coeff 12 19 1.0   1.0 2.5
+pair_coeff 12 20 1.0   1.0 2.5
+pair_coeff 12 21 1.0   1.0 2.5
+pair_coeff 12 22 1.0   1.0 2.5
+pair_coeff 12 23 1.0   1.0 2.5
+pair_coeff 12 24 1.0   1.0 2.5
+pair_coeff 13 13 1.0   1.0 1.12246152962189
+pair_coeff 13 14 1.0   1.0 2.5
+pair_coeff 13 15 1.0   1.0 2.5
+pair_coeff 13 16 1.0   1.0 2.5
+pair_coeff 13 17 1.0   1.0 2.5
+pair_coeff 13 18 1.0   1.0 2.5
+pair_coeff 13 19 1.0   1.0 2.5
+pair_coeff 13 20 1.0   1.0 2.5
+pair_coeff 13 21 1.0   1.0 2.5
+pair_coeff 13 22 1.0   1.0 2.5
+pair_coeff 13 23 1.0   1.0 2.5
+pair_coeff 13 24 1.0   1.0 2.5
+pair_coeff 14 14 1.0   1.0 1.12246152962189
+pair_coeff 14 15 1.0   1.0 2.5
+pair_coeff 14 16 1.0   1.0 2.5
+pair_coeff 14 17 1.0   1.0 2.5
+pair_coeff 14 18 1.0   1.0 2.5
+pair_coeff 14 19 1.0   1.0 2.5
+pair_coeff 14 20 1.0   1.0 2.5
+pair_coeff 14 21 1.0   1.0 2.5
+pair_coeff 14 22 1.0   1.0 2.5
+pair_coeff 14 23 1.0   1.0 2.5
+pair_coeff 14 24 1.0   1.0 2.5
+pair_coeff 15 15 1.0   1.0 1.12246152962189
+pair_coeff 15 16 1.0   1.0 2.5
+pair_coeff 15 17 1.0   1.0 2.5
+pair_coeff 15 18 1.0   1.0 2.5
+pair_coeff 15 19 1.0   1.0 2.5
+pair_coeff 15 20 1.0   1.0 2.5
+pair_coeff 15 21 1.0   1.0 2.5
+pair_coeff 15 22 1.0   1.0 2.5
+pair_coeff 15 23 1.0   1.0 2.5
+pair_coeff 15 24 1.0   1.0 2.5
+pair_coeff 16 16 1.0   1.0 1.12246152962189
+pair_coeff 16 17 1.0   1.0 2.5
+pair_coeff 16 18 1.0   1.0 2.5
+pair_coeff 16 19 1.0   1.0 2.5
+pair_coeff 16 20 1.0   1.0 2.5
+pair_coeff 16 21 1.0   1.0 2.5
+pair_coeff 16 22 1.0   1.0 2.5
+pair_coeff 16 23 1.0   1.0 2.5
+pair_coeff 16 24 1.0   1.0 2.5
+pair_coeff 17 17 1.0   1.0 1.12246152962189
+pair_coeff 17 18 1.0   1.0 2.5
+pair_coeff 17 19 1.0   1.0 2.5
+pair_coeff 17 20 1.0   1.0 2.5
+pair_coeff 17 21 1.0   1.0 2.5
+pair_coeff 17 22 1.0   1.0 2.5
+pair_coeff 17 23 1.0   1.0 2.5
+pair_coeff 17 24 1.0   1.0 2.5
+pair_coeff 18 18 1.0   1.0 1.12246152962189
+pair_coeff 18 19 1.0   1.0 2.5
+pair_coeff 18 20 1.0   1.0 2.5
+pair_coeff 18 21 1.0   1.0 2.5
+pair_coeff 18 22 1.0   1.0 2.5
+pair_coeff 18 23 1.0   1.0 2.5
+pair_coeff 18 24 1.0   1.0 2.5
+pair_coeff 19 19 1.0   1.0 1.12246152962189
+pair_coeff 19 20 1.0   1.0 2.5
+pair_coeff 19 21 1.0   1.0 2.5
+pair_coeff 19 22 1.0   1.0 2.5
+pair_coeff 19 23 1.0   1.0 2.5
+pair_coeff 19 24 1.0   1.0 2.5
+pair_coeff 20 20 1.0   1.0 1.12246152962189
+pair_coeff 20 21 1.0   1.0 2.5
+pair_coeff 20 22 1.0   1.0 2.5
+pair_coeff 20 23 1.0   1.0 2.5
+pair_coeff 20 24 1.0   1.0 2.5
+pair_coeff 21 21 1.0   1.0 1.12246152962189
+pair_coeff 21 22 1.0   1.0 2.5
+pair_coeff 21 23 1.0   1.0 2.5
+pair_coeff 21 24 1.0   1.0 2.5
+pair_coeff 22 22 1.0   1.0 1.12246152962189
+pair_coeff 22 23 1.0   1.0 2.5
+pair_coeff 22 24 1.0   1.0 2.5
+pair_coeff 23 23 1.0   1.0 1.12246152962189
+pair_coeff 23 24 1.0   1.0 2.5
+pair_coeff 24 24 1.0   1.0 1.12246152962189
+
+#########################################################
+# Pair interaction between bonded atoms                 #
+#                                                       #
+# Fene potential + Lennard Jones 12-6:                  #
+#  E= - 0.5 K R0^2 ln[ 1- (r/R0)^2]                     #
+#     + 4epsilon[ (sigma/r)^12 - (sigma/r)^6] + epsilon #
+#########################################################
+bond_style      fene
+
+########################################
+# For style fene, specify:             #
+#   * bond type                        #
+#   * K (energy/distance^2)            #
+#   * R0 (distance)                    #
+#   * epsilon (energy)  (LJ component) #
+#   * sigma (distance)  (LJ component) #
+########################################
+bond_coeff   *     300.0     1.5     10.0       1.0
+
+special_bonds fene #<=== I M P O R T A N T (new command)
+
+##############################
+# set timestep of integrator #
+##############################
+#timestep 0.006
+timestep 0.003
+
+#######################################################
+# Set up fixes                                        #
+# use NVE ensemble                                    #
+# Langevin integrator Tstart Tstop 1/friction rndseed #
+# => sampling NVT ensamble                            #
+#######################################################
+fix 1 all nve
+fix 2 all langevin   1.0 1.0 2.0                XXXseedXXX
+
+#########################################
+# run integration for a number of steps #
+#########################################
+thermo_style   custom   step temp etotal
+
+variable NuclearRadius equal 83.3333
+
+region nucleus sphere XXXxNADsXXX XXXyNADsXXX XXXzNADsXXX v_NuclearRadius   units box side in
+#The NuclearRadius is 83.3333*30.0 ~ 2500 nm
+
+fix NUCLEUS           all wall/region nucleus   lj126 1.0 1.0 1.1224615296218
+
+thermo_style   custom   step temp etotal v_NuclearRadius
+
+minimize 1.0e-4 1.0e-6 100000 100000
+
+dump 1 all custom XXXdumpXXX chrs10_system_preparation_inflate_NADs_particles_replica_XXXreplicaXXX.XYZ id type xu yu zu
+dump_modify   1 format line "%d %d %.5f %.5f %.5f" sort id append yes
+
+reset_timestep 0
+run 2000000
+
+write_data 4_inflate_NADs_particles_vshape_case_part1_replica_XXXreplicaXXX.txt nocoeff
+
+#Inflate the nucleolar particles
+undump 1
+timestep 0.0001
+dump 1 all custom 1000 chrs10_system_preparation_inflate_NADs_particles_replica_XXXreplicaXXX.XYZ id type xu yu zu
+dump_modify   1 format line "%d %d %.5f %.5f %.5f" sort id append yes
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1 1.12246
+pair_coeff  5  5 1.0   1 2.5
+bond_coeff   2     300.0     1.5 10.0 1 # Bonds between NADs      particles
+bond_coeff   3     300.0     1.5 10.0 1 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.1 1.23471
+pair_coeff  5  5 1.0   1.2 3
+bond_coeff   2     300.0     1.8 10.0 1.2 # Bonds between NADs      particles
+bond_coeff   3     300.0     1.65 10.0 1.1 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.2 1.34695
+pair_coeff  5  5 1.0   1.4 3.5
+bond_coeff   2     300.0     2.1 10.0 1.4 # Bonds between NADs      particles
+bond_coeff   3     300.0     1.8 10.0 1.2 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.3 1.4592
+pair_coeff  5  5 1.0   1.6 4
+bond_coeff   2     300.0     2.4 10.0 1.6 # Bonds between NADs      particles
+bond_coeff   3     300.0     1.95 10.0 1.3 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.4 1.57145
+pair_coeff  5  5 1.0   1.8 4.5
+bond_coeff   2     300.0     2.7 10.0 1.8 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.1 10.0 1.4 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.5 1.68369
+pair_coeff  5  5 1.0   2 5
+bond_coeff   2     300.0     3 10.0 2 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.25 10.0 1.5 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.6 1.79594
+pair_coeff  5  5 1.0   2.2 5.5
+bond_coeff   2     300.0     3.3 10.0 2.2 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.4 10.0 1.6 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.7 1.90818
+pair_coeff  5  5 1.0   2.4 6
+bond_coeff   2     300.0     3.6 10.0 2.4 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.55 10.0 1.7 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.8 2.02043
+pair_coeff  5  5 1.0   2.6 6.5
+bond_coeff   2     300.0     3.9 10.0 2.6 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.7 10.0 1.8 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   1.9 2.13268
+pair_coeff  5  5 1.0   2.8 7
+bond_coeff   2     300.0     4.2 10.0 2.8 # Bonds between NADs      particles
+bond_coeff   3     300.0     2.85 10.0 1.9 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2 2.24492
+pair_coeff  5  5 1.0   3 7.5
+bond_coeff   2     300.0     4.5 10.0 3 # Bonds between NADs      particles
+bond_coeff   3     300.0     3 10.0 2 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.1 2.35717
+pair_coeff  5  5 1.0   3.2 8
+bond_coeff   2     300.0     4.8 10.0 3.2 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.15 10.0 2.1 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.2 2.46942
+pair_coeff  5  5 1.0   3.4 8.5
+bond_coeff   2     300.0     5.1 10.0 3.4 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.3 10.0 2.2 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.3 2.58166
+pair_coeff  5  5 1.0   3.6 9
+bond_coeff   2     300.0     5.4 10.0 3.6 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.45 10.0 2.3 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.4 2.69391
+pair_coeff  5  5 1.0   3.8 9.5
+bond_coeff   2     300.0     5.7 10.0 3.8 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.6 10.0 2.4 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.5 2.80615
+pair_coeff  5  5 1.0   4 10
+bond_coeff   2     300.0     6 10.0 4 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.75 10.0 2.5 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.6 2.9184
+pair_coeff  5  5 1.0   4.2 10.5
+bond_coeff   2     300.0     6.3 10.0 4.2 # Bonds between NADs      particles
+bond_coeff   3     300.0     3.9 10.0 2.6 # Bonds between interface particles
+run 1000
+
+minimize 1.0e-4 1.0e-6 100000 100000
+pair_coeff  *  5 1.0   2.7 3.03065
+pair_coeff  5  5 1.0   4.4 11
+bond_coeff   2     300.0     6.6 10.0 4.4 # Bonds between NADs      particles
+bond_coeff   3     300.0     4.05 10.0 2.7 # Bonds between interface particles
+run 1000
+
+write_data 4_inflate_NADs_particles_vshape_case_part2_replica_XXXreplicaXXX.txt nocoeff
+
+timestep 0.003
+
+undump 1
+dump 1 all custom XXXdumpXXX chrs10_system_preparation_inflate_NADs_particles_replica_XXXreplicaXXX.XYZ id type xu yu zu
+dump_modify   1 format line "%d %d %.5f %.5f %.5f" sort id append yes
+
+reset_timestep 0
+run 1000000
+write_data 4_inflate_NADs_particles_vshape_case_part3_replica_XXXreplicaXXX.txt nocoeff
