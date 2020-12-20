@@ -1,0 +1,5 @@
+Undetermined 358
+Active 1792
+Telomere 100
+Heterochromatin 224
+Polycomb_like 444

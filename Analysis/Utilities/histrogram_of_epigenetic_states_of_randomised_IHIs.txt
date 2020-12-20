@@ -1,0 +1,6 @@
+NORs 135.52 98.2805 50
+Undetermined 347.5 43.8038 50
+Active 1542.12 127.394 50
+Telomere 9.18 20.2945 50
+Polycomb_like 411.34 59.5992 50
+Heterochromatin 472.34 183.335 50

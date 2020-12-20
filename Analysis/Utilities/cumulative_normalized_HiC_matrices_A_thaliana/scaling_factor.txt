@@ -1,0 +1,5 @@
+norm 150kb 14.6931
+norm 150kb full 14.6931
+norm 30kb full 14.1649
+norm 15kb full 14.2501
+norm 30kb chr4 15.4152
