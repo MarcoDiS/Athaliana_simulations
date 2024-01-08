@@ -1,13 +1,12 @@
 # Arabidopsis thaliana chromosome simulations
-This repositories contains all the scripts to perform the molecular dynamics simulations and model analysis in 
+This repository contains all the scripts to perform the molecular dynamics simulations and model analysis in 
 
 Marco Di Stefano, Hans-Wilhelm Nützmann, Marc A. Marti-Renom, Daniel Jost.
-**Polymer modelling unveils the roles of heterochromatin and nucleolar organizing regions in shaping 3D genome organization in Arabidopsis thaliana**
-*Under review*.
+**Polymer modelling unveils the roles of heterochromatin and nucleolar organizing regions in shaping 3D genome organization in Arabidopsis thaliana**, Nucleic Acids Research, Volume 49, Issue 4, 26 February 2021, Pages 1840–1858, https://doi.org/10.1093/nar/gkaa1275.
 
 Methods implemented
 -------------------
-In the actual implementation, this repository relies on TADdyn [TADdyn]_ for the preparation of the single-chromosome intial conformations, on LAMMPS [Plimpton]_ for the implementation of the simulations.
+In the actual implementation, this repository relies on TADdyn [TADdyn]_ for the preparation of the single-chromosome initial conformations, on LAMMPS [Plimpton]_ for the implementation of the simulations.
 
 Bibliography
 ************
